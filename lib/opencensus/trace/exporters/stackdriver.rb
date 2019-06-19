@@ -76,7 +76,7 @@ module OpenCensus
             fallback_policy: :caller_runs
           @project_id = final_project_id project_id
 
-          @executor = create_executor max_threads, max_queue
+          @executor = create_executor max_threads, max_queue, fallback_policy
           if auto_terminate_time
             terminate_at_exit! @executor, auto_terminate_time
           end
