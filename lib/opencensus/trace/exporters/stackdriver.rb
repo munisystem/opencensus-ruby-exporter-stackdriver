@@ -72,7 +72,8 @@ module OpenCensus
             max_queue: 1000,
             max_threads: 1,
             auto_terminate_time: 10,
-            mock_client: nil
+            mock_client: nil,
+            fallback_policy: :caller_runs
           @project_id = final_project_id project_id
 
           @executor = create_executor max_threads, max_queue
@@ -188,11 +189,11 @@ module OpenCensus
         private
 
         # Create the executor
-        def create_executor max_threads, max_queue
+        def create_executor max_threads, max_queue, fallback_policy
           if max_threads >= 1
             Concurrent::ThreadPoolExecutor.new \
               min_length: 1, max_length: max_threads,
-              max_queue: max_queue, fallback_policy: :caller_runs,
+              max_queue: max_queue, fallback_policy: fallback_policy,
               auto_terminate: false
           else
             Concurrent::ImmediateExecutor.new
